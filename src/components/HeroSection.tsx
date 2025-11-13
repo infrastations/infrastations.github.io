@@ -8,6 +8,10 @@ export default function HeroSection() {
     document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const startingYear = 2020; 
+  const currentYear = new Date().getFullYear();
+  const yearsOfExperience = currentYear - startingYear + 1;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Effects */}
@@ -106,7 +110,7 @@ export default function HeroSection() {
               <div className="text-sm text-muted-foreground">Core Services</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-neon-cyan">6+</div>
+              <div className="text-2xl font-bold text-neon-cyan">{yearsOfExperience}+</div>
               <div className="text-sm text-muted-foreground">Years of Experience</div>
             </div>
           </motion.div>
