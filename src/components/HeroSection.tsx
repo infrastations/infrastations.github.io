@@ -98,16 +98,16 @@ export default function HeroSection() {
             className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50"
           >
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">Projects Delivered</div>
+              <div className="text-2xl font-bold text-primary">20+</div>
+              <div className="text-sm text-muted-foreground">Projects On Going</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-secondary">3</div>
               <div className="text-sm text-muted-foreground">Core Services</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-neon-cyan">99%</div>
-              <div className="text-sm text-muted-foreground">Client Satisfaction</div>
+              <div className="text-2xl font-bold text-neon-cyan">6+</div>
+              <div className="text-sm text-muted-foreground">Years of Experience</div>
             </div>
           </motion.div>
         </motion.div>
