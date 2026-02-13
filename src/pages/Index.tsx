@@ -10,7 +10,7 @@ const Index = () => {
       <ServicesSection />
       <PortfolioSection />
       <ContactSection />
-      
+
       {/* Footer */}
       <footer className="border-t border-border/50 py-12">
         <div className="max-w-7xl mx-auto px-6">
@@ -20,12 +20,12 @@ const Index = () => {
               Building the Future, One Platform at a Time
             </p>
             <div className="flex justify-center space-x-6 text-sm text-muted-foreground">
-              <span>© 2024 Infra Stations</span>
+              <span>© {new Date().getFullYear()} Infra Stations</span>
               <span>•</span>
-              <span>Dhaka, Bangladesh</span>
+              <span>Mirpur, Dhaka, Bangladesh</span>
               <span>•</span>
-              <a 
-                href="mailto:infrastations@gmail.com" 
+              <a
+                href="mailto:infrastations@gmail.com"
                 className="hover:text-primary transition-colors"
               >
                 infrastations@gmail.com

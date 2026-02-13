@@ -31,15 +31,15 @@ export default function ContactSection() {
     {
       icon: Phone,
       label: "Phone",
-      value: "+8801511803004",
-      href: "tel:+8801511803004",
+      value: "+8801577360573",
+      href: "tel:+8801577360573",
       color: "text-secondary"
     },
     {
       icon: MapPin,
       label: "Location",
-      value: "Dhaka, Bangladesh",
-      href: "#",
+      value: "Mirpur, Dhaka, Bangladesh",
+      href: "https://maps.app.goo.gl/eoLqUnpGDdhBJYQj6",
       color: "text-neon-cyan"
     }
   ];
