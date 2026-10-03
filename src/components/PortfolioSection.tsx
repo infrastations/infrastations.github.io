@@ -1,201 +1,171 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ExternalLink, Github, ArrowRight, X } from 'lucide-react';
+import { ExternalLink, ArrowRight, X, CheckCircle2, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
-// Import images
-import hybridCloudMigrationImg from '@/assets/hybrid-cloud-migration.jpg';
-import multiCloudKubernetesImg from '@/assets/multi-cloud-kubernetes.jpg';
-import disasterRecoveryImg from '@/assets/disaster-recovery.jpg';
-import serverlessArchitectureImg from '@/assets/serverless-architecture.jpg';
-import mlopsplatformImg from '@/assets/mlops-platform.jpg';
-import finopsPlatformImg from '@/assets/finops-platform.jpg';
-import dataLakePlatformImg from '@/assets/data-lake-platform.jpg';
-import securityComplianceImg from '@/assets/security-compliance.jpg';
-import legacyModernizationImg from '@/assets/legacy-modernization.jpg';
-import iotPlatformImg from '@/assets/iot-platform.jpg';
-import techAbstractImg from '@/assets/tech-abstract.jpg';
-import cloudInfrastructureImg from '@/assets/cloud-infrastructure.jpg';
-import heroBgImg from '@/assets/hero-bg.jpg';
+// Website UI snapshots (desktop, 1440x900)
+import inshaHajj1 from '@/assets/portfolio/insha-hajj-umrah-1.jpg';
+import inshaHajj2 from '@/assets/portfolio/insha-hajj-umrah-2.jpg';
+import madchef1 from '@/assets/portfolio/madchef-1.jpg';
+import madchef2 from '@/assets/portfolio/madchef-2.jpg';
+import northview1 from '@/assets/portfolio/northview-1.jpg';
+import northview2 from '@/assets/portfolio/northview-2.jpg';
+import rjstyle1 from '@/assets/portfolio/rjstyle-1.jpg';
+import rjstyle2 from '@/assets/portfolio/rjstyle-2.jpg';
+import houseInterior1 from '@/assets/portfolio/house-interior-1.jpg';
+import houseInterior2 from '@/assets/portfolio/house-interior-2.jpg';
+import infracare1 from '@/assets/portfolio/infracare-hospital-1.jpg';
+import infracare2 from '@/assets/portfolio/infracare-hospital-2.jpg';
 
-const projects = [
+type Project = {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  technologies: string[];
+  image: string;
+  gallery: string[];
+  features: string[];
+  results: string[];
+  problem: string;
+  solution: string;
+  link: string;
+};
+
+const projects: Project[] = [
   {
     id: 1,
-    title: "Hybrid Cloud Migration Platform",
-    category: "Cloud Infrastructure",
-    description: "Automated platform for migrating on-premises applications and data to hybrid cloud environments with comprehensive management capabilities.",
-    technologies: ["Azure Stack HCI", "AWS Outposts", "Terraform", "Kubernetes", "PowerShell"],
-    image: hybridCloudMigrationImg,
-    results: ["75% faster migrations", "Zero downtime transitions", "50% cost optimization"],
-    problem: "Enterprise needed seamless migration from on-premises to hybrid cloud while maintaining operational continuity and managing complex dependencies.",
-    solution: "Developed automated discovery and dependency mapping platform with cost analysis engine, providing single pane of glass for hybrid resource management including monitoring, security, and governance.",
-    link: "#",
-    github: "#"
+    title: "InSha Hajj & Umrah Group",
+    category: "Travel & Pilgrimage",
+    description: "Complete Hajj & Umrah agency website for a Dhaka-based travel group — package comparison, Shariah consultants, service areas and online booking requests.",
+    technologies: ["React", "TypeScript", "Vite", "Tailwind CSS", "GitHub Pages"],
+    image: inshaHajj1,
+    gallery: [inshaHajj1, inshaHajj2],
+    features: [
+      "Umrah & Hajj package cards with price, dates, hotel distance, flights and food details",
+      "Super Saver, Economy, Standard, Premium, Luxury and VIP package tiers",
+      "Shariah consultant & Umrah guide profiles",
+      "Customized Umrah package request and online booking flow",
+      "Service-area directory covering all 64 districts of Bangladesh",
+      "Video tutorials, client testimonials slider and WhatsApp / phone quick contact",
+    ],
+    results: ["9 Umrah & Hajj packages", "64 district service areas", "1-click WhatsApp contact"],
+    problem: "Pilgrims had no single place to compare Umrah and Hajj packages — prices, hotel distance from Haram, flights and inclusions were scattered across phone calls and Facebook posts.",
+    solution: "Built a modern agency website where every package is laid out side-by-side with its price, dates, Makkah/Madinah hotel, flights, food and special services, backed by consultant profiles, a district-wise service area map and direct booking / WhatsApp actions.",
+    link: "https://infrastations.github.io/inshahajjumrahagency/",
   },
   {
     id: 2,
-    title: "Multi-Cloud Kubernetes PaaS",
-    category: "Cloud Infrastructure",
-    description: "Custom Platform as a Service built on Kubernetes operating across multiple cloud providers with unified management.",
-    technologies: ["AWS EKS", "Google GKE", "Azure AKS", "Istio", "ArgoCD", "Prometheus"],
-    image: multiCloudKubernetesImg,
-    results: ["90% deployment consistency", "60% faster time-to-market", "Unified multi-cloud ops"],
-    problem: "Development teams struggled with inconsistent deployments across different cloud providers, lacking centralized management and standardization.",
-    solution: "Created abstracted control plane that enables consistent application deployment to any cloud provider, including centralized logging, monitoring, CI/CD pipelines, and service mesh for inter-service communication.",
-    link: "#",
-    github: "#"
+    title: "Madchef — Gourmet Burgers",
+    category: "Restaurant & Food",
+    description: "Bold, appetite-driven website for Madchef, one of Dhaka's best-known burger chains — full digital menu, outlet finder, food gallery and customer reviews.",
+    technologies: ["React", "TypeScript", "Vite", "Tailwind CSS", "Framer Motion"],
+    image: madchef1,
+    gallery: [madchef1, madchef2],
+    features: [
+      "Full-screen hero slider showcasing signature dishes",
+      "Digital menu with Card View and Table View toggle",
+      "Menu grouped by category — teasers, burgers, poutines, rice meals, platters, shakes",
+      "Outlet finder for 9 Dhaka branches with Call, Direction and Facebook actions",
+      "MAD Gallery of signature dishes, brand story and customer reviews",
+    ],
+    results: ["39 menu items online", "9 outlets with directions", "2 menu view modes"],
+    problem: "The restaurant's menu, prices and branch locations lived only on social media, making it hard for customers to quickly check what to order and which outlet was nearest.",
+    solution: "Designed a dark, high-energy brand site with a categorised digital menu (switchable card / table view), a branch directory with one-tap call and Google Maps directions, a food gallery and a reviews section that reinforces the brand story.",
+    link: "https://infrastations.github.io/madchef/",
   },
   {
     id: 3,
-    title: "Automated Disaster Recovery System",
-    category: "Cloud Infrastructure",
-    description: "Fully automated disaster recovery solution for mission-critical applications with intelligent failover capabilities.",
-    technologies: ["Terraform", "Ansible", "AWS", "Azure", "Jenkins", "Python"],
-    image: disasterRecoveryImg,
-    results: ["99.99% availability", "< 5 min recovery time", "Zero data loss guarantee"],
-    problem: "Mission-critical applications required bulletproof disaster recovery with minimal human intervention and guaranteed business continuity.",
-    solution: "Designed automated failover and failback processes using Infrastructure as Code to replicate entire production environments, with runbook automation system orchestrating recovery with minimal human intervention.",
-    link: "#",
-    github: "#"
+    title: "Northview International School & College",
+    category: "Education",
+    description: "Bilingual (Bangla & English) school website with notice board, events, news, faculty directory, photo gallery, results and online admission.",
+    technologies: ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui"],
+    image: northview1,
+    gallery: [northview1, northview2],
+    features: [
+      "Live Notice Board, Latest Events and Latest News panels",
+      "Online admission (Apply Now) flow",
+      "Chairman's & Principal's messages, awards and 'Why Study Here' pages",
+      "Teacher directory with faculty profiles",
+      "Categorised photo gallery — classroom, cultural, science fair, sports",
+      "Digital content, facilities and result sections",
+    ],
+    results: ["3 live info boards", "4 gallery albums", "2 languages supported"],
+    problem: "Parents and students depended on printed notices and word of mouth for exams, holidays, events and admission information.",
+    solution: "Built a bilingual institutional website where notices, events and news are published in one place, alongside admission, faculty, gallery, facilities and results — giving the school an always-up-to-date public face.",
+    link: "https://infrastations.github.io/northviewisc/",
   },
   {
     id: 4,
-    title: "Enterprise Serverless Architecture",
-    category: "Cloud Infrastructure",
-    description: "Blueprint and reusable components for building complex, event-driven serverless applications at enterprise scale.",
-    technologies: ["AWS Lambda", "Azure Functions", "API Gateway", "DynamoDB", "EventBridge"],
-    image: serverlessArchitectureImg,
-    results: ["80% cost reduction", "Infinite scalability", "Sub-second response times"],
-    problem: "Enterprise needed scalable, cost-effective architecture for handling high-traffic applications without traditional server management overhead.",
-    solution: "Developed comprehensive serverless backend blueprint using functions, data stores, messaging queues, and API gateways, creating scalable and cost-effective architecture for high-traffic applications.",
-    link: "#",
-    github: "#"
+    title: "RJ Style — Beauty E-Commerce",
+    category: "E-Commerce",
+    description: "Premium cosmetics & skincare storefront for a Bangladesh beauty brand — product catalogue, cart, combo offers, beauty blog and instant WhatsApp / Imo ordering.",
+    technologies: ["React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Lovable Cloud"],
+    image: rjstyle1,
+    gallery: [rjstyle1, rjstyle2],
+    features: [
+      "Shop by category — Face & Base, Eyes & Brows, Lips, Skincare",
+      "Best-seller product grid with Add-to-Cart and pagination",
+      "Shopping cart with live item counter",
+      "Combo / bundle offers page",
+      "Bangla beauty journal (blog) and video section",
+      "Instant ordering via WhatsApp & Imo with floating order button",
+    ],
+    results: ["4 shop categories", "2 instant order channels", "7 storefront pages"],
+    problem: "The brand sold mostly through social media DMs — customers couldn't browse the full range, compare prices or trust product authenticity.",
+    solution: "Created an elegant storefront with categorised products, cart, combo deals, bilingual reviews and a beauty blog, while keeping the familiar WhatsApp / Imo ordering path one tap away.",
+    link: "https://rjstyle.lovable.app/",
   },
   {
     id: 5,
-    title: "AI/ML MLOps Platform",
-    category: "Agentic AI",
-    description: "Robust MLOps platform automating the entire machine learning lifecycle from data ingestion to model deployment and monitoring.",
-    technologies: ["AWS SageMaker", "MLflow", "Kubeflow", "Docker", "Python", "TensorFlow"],
-    image: mlopsplatformImg,
-    results: ["10x faster model deployment", "95% model accuracy", "Automated drift detection"],
-    problem: "Data science teams lacked automated pipeline for model lifecycle management, causing delays in production deployments and model performance issues.",
-    solution: "Built comprehensive MLOps platform with versioning for data and models, automated training pipelines, scalable API deployment, and real-time monitoring for model performance and drift detection.",
-    link: "#",
-    github: "#"
+    title: "House & Interior Design Ideas",
+    category: "Architecture & Interior",
+    description: "Editorial-style website for an architecture & interior design studio — project portfolio, services, process, journal, client portal and an interactive style quiz.",
+    technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Lovable Cloud"],
+    image: houseInterior1,
+    gallery: [houseInterior1, houseInterior2],
+    features: [
+      "Cinematic hero with studio stats (projects, years, return clientele)",
+      "Selected-work portfolio grid with project location & type",
+      "Interactive before / after drag slider for transformations",
+      "Services: architectural design, interior design, renovation",
+      "Signature Style Quiz — six visual questions to a personal style profile",
+      "Process, journal, client portal and 'Start a Project' enquiry",
+    ],
+    results: ["5 featured projects", "6-question style quiz", "3 design disciplines"],
+    problem: "The studio needed a premium online presence that communicates design quality visually and converts visitors into qualified project enquiries.",
+    solution: "Designed a calm, magazine-like experience with full-bleed project imagery, a before/after transformation slider, an engaging style quiz for lead capture and a client portal for ongoing projects.",
+    link: "https://houseandinteriordesignideas.lovable.app/",
   },
   {
     id: 6,
-    title: "FinOps Cost Optimization Platform",
-    category: "Cloud Infrastructure",
-    description: "In-house FinOps platform providing deep insights and automated recommendations for comprehensive cloud cost management.",
-    technologies: ["Python", "React", "AWS Cost Explorer", "Azure Cost Management", "PostgreSQL"],
-    image: finopsPlatformImg,
-    results: ["40% cost savings", "Real-time spend tracking", "Automated optimizations"],
-    problem: "Organization struggled with escalating cloud costs, idle resources, and lack of visibility into spending patterns across multiple cloud providers.",
-    solution: "Created integrated FinOps platform connecting with cloud billing APIs for spend tracking, idle resource identification, right-sizing recommendations, and automated cost-saving actions based on predefined business rules.",
-    link: "#",
-    github: "#"
+    title: "Infra Care Hospital",
+    category: "Healthcare",
+    description: "Full hospital website — departments, consultant directory, appointment booking, interactive body-part department finder, services and health check-up packages.",
+    technologies: ["React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Lovable Cloud"],
+    image: infracare1,
+    gallery: [infracare1, infracare2],
+    features: [
+      "Interactive body-part selector (male / female) to find the right department",
+      "41 specialised departments with dedicated pages",
+      "Consultant / doctor directory with 'Book Now' appointment",
+      "Services — Emergency, OPD, IPD, ICU, HDU and more",
+      "Health check-up packages with discounted pricing",
+      "Patient success stories, media and 24/7 emergency contact",
+    ],
+    results: ["41 departments listed", "15 body-part finder zones", "24/7 emergency access"],
+    problem: "Patients often don't know which department or specialist to visit, and hospital information (doctors, services, packages) was hard to find online.",
+    solution: "Built a patient-first hospital portal with an interactive body map that routes patients to the right department, a searchable consultant directory with appointment booking, and clear service and check-up package pages.",
+    link: "https://infracarehospital.lovable.app/",
   },
-  {
-    id: 7,
-    title: "Secure Data Lake Analytics Platform",
-    category: "Cloud Infrastructure",
-    description: "Secure, scalable data lake on cloud with comprehensive analytics capabilities and enterprise-grade security model.",
-    technologies: ["AWS S3", "Azure Data Lake", "Amazon Athena", "Apache Spark", "IAM", "Glue"],
-    image: dataLakePlatformImg,
-    results: ["Petabyte-scale processing", "Real-time analytics", "Enterprise security compliance"],
-    problem: "Enterprise needed centralized, secure data repository with advanced analytics capabilities while maintaining strict compliance and access controls.",
-    solution: "Designed secure data lake with automated ingestion pipelines from various sources, implemented robust security model with role-based access controls, and integrated analytics services for business intelligence and data science teams.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 8,
-    title: "Cloud Security & Compliance Framework",
-    category: "Cloud Infrastructure",
-    description: "Comprehensive framework ensuring continuous security and compliance in cloud environments with automated remediation.",
-    technologies: ["AWS Security Hub", "Azure Security Center", "Terraform", "Python", "Compliance APIs"],
-    image: securityComplianceImg,
-    results: ["100% compliance adherence", "Automated threat response", "Zero security incidents"],
-    problem: "Organization required continuous security monitoring and compliance enforcement across multi-cloud environment with automated remediation capabilities.",
-    solution: "Developed comprehensive security framework automating best practices using cloud security services, created custom policies for compliance standards (SOC 2, ISO 27001), and built automated remediation system for security vulnerabilities.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 9,
-    title: "Legacy Monolith Modernization",
-    category: "Cloud Infrastructure",
-    description: "Complete re-architecture and migration of large monolithic application to cloud-native microservices architecture.",
-    technologies: ["Docker", "Kubernetes", "Spring Boot", "PostgreSQL", "Redis", "Istio"],
-    image: legacyModernizationImg,
-    results: ["Zero downtime migration", "10x faster deployments", "Improved scalability"],
-    problem: "Large monolithic application created deployment bottlenecks, scaling issues, and maintenance challenges requiring complete architectural transformation.",
-    solution: "Led phased re-architecture breaking down monolith into microservices, containerized services using Docker, orchestrated with Kubernetes, and migrated data ensuring minimal downtime during transition.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 10,
-    title: "IoT Data Processing Pipeline",
-    category: "Cloud Infrastructure",
-    description: "Scalable cloud-based platform for ingesting, processing, and analyzing data from thousands of IoT devices in real-time.",
-    technologies: ["AWS IoT Core", "Kinesis", "Lambda", "DynamoDB", "ElasticSearch", "Grafana"],
-    image: iotPlatformImg,
-    results: ["Million+ devices supported", "Sub-second processing", "Real-time insights"],
-    problem: "Industrial client needed scalable platform to handle massive IoT data streams from thousands of devices while providing real-time analytics and insights.",
-    solution: "Built cloud-native platform using IoT services for device connectivity, serverless functions for real-time processing, stream processing for data analysis, and data lake storage for advanced analytics and machine learning.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 11,
-    title: "E-Commerce Platform",
-    category: "Web Development",
-    description: "Full-stack e-commerce solution with real-time inventory management and AI-powered recommendations.",
-    technologies: ["React", "Node.js", "PostgreSQL", "AWS"],
-    image: techAbstractImg,
-    results: ["40% increase in conversion", "3x faster load times", "99.9% uptime"],
-    problem: "Client needed a scalable e-commerce platform that could handle high traffic during sales events while providing personalized shopping experiences.",
-    solution: "Built a microservices architecture with React frontend, Node.js backend, and implemented ML-powered recommendation engine with real-time analytics.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 12,
-    title: "Cloud Migration Suite",
-    category: "Cloud Infrastructure",
-    description: "Complete cloud migration solution for enterprise clients moving from on-premise to AWS.",
-    technologies: ["AWS", "Kubernetes", "Docker", "Terraform"],
-    image: cloudInfrastructureImg,
-    results: ["60% cost reduction", "Zero downtime migration", "50% faster deployments"],
-    problem: "Enterprise client struggled with legacy infrastructure causing high maintenance costs and slow deployment cycles.",
-    solution: "Designed containerized microservices architecture with automated CI/CD pipelines and implemented infrastructure as code for consistent deployments.",
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 13,
-    title: "AI Analytics Dashboard",
-    category: "Agentic AI",
-    description: "Intelligent analytics platform that automatically generates insights and predictive models from business data.",
-    technologies: ["Python", "TensorFlow", "React", "MongoDB"],
-    image: heroBgImg,
-    results: ["85% accuracy in predictions", "2 hours saved daily", "30% revenue increase"],
-    problem: "Business needed to transform raw data into actionable insights but lacked data science expertise and resources.",
-    solution: "Developed AI-powered analytics platform with automated model training, natural language insights generation, and interactive visualizations.",
-    link: "#",
-    github: "#"
-  }
 ];
 
-function ProjectCard({ project, index, onViewDetails }: { 
-  project: typeof projects[0], 
+function ProjectCard({ project, index, onViewDetails }: {
+  project: Project,
   index: number,
-  onViewDetails: (project: typeof projects[0]) => void 
+  onViewDetails: (project: Project) => void
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -205,40 +175,65 @@ function ProjectCard({ project, index, onViewDetails }: {
       ref={ref}
       initial={{ opacity: 0, y: 100 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
-      transition={{ duration: 0.8, delay: index * 0.2, ease: "easeOut" }}
+      transition={{ duration: 0.8, delay: (index % 3) * 0.2, ease: "easeOut" }}
       className="group hover-lift cursor-pointer"
       onClick={() => onViewDetails(project)}
     >
-      <div className="card-neon h-full overflow-hidden">
-        {/* Project Image */}
-        <div className="relative h-48 mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className="w-full h-full object-cover"
+      <div className="card-neon h-full overflow-hidden flex flex-col">
+        {/* Website Snapshot */}
+        <div className="relative aspect-[16/10] mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 border border-border/50">
+          {/* Browser bar */}
+          <div className="absolute top-0 inset-x-0 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-card/90 backdrop-blur-sm border-b border-border/50">
+            <span className="w-2 h-2 rounded-full bg-red-400/80" />
+            <span className="w-2 h-2 rounded-full bg-yellow-400/80" />
+            <span className="w-2 h-2 rounded-full bg-green-400/80" />
+            <span className="ml-2 text-[10px] text-muted-foreground truncate">
+              {project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+            </span>
+          </div>
+          <img
+            src={project.gallery[0]}
+            alt={`${project.title} website homepage`}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover object-top pt-6 transition-opacity duration-500 group-hover:opacity-0"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-          <div className="absolute top-4 right-4 z-20">
+          <img
+            src={project.gallery[1] ?? project.gallery[0]}
+            alt={`${project.title} website section`}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover object-top pt-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10" />
+          <div className="absolute bottom-3 left-3 z-20">
             <span className="px-3 py-1 bg-card/90 backdrop-blur-sm rounded-full text-xs font-medium text-primary border border-primary/20">
               {project.category}
             </span>
           </div>
-          <div className="absolute inset-0 bg-gradient-primary opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
         </div>
 
         {/* Content */}
         <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-gradient-primary transition-all duration-300">
           {project.title}
         </h3>
-        
+
         <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-3">
           {project.description}
         </p>
 
+        {/* Core Functionalities */}
+        <div className="space-y-2 mb-5">
+          {project.features.slice(0, 3).map((feature, idx) => (
+            <div key={idx} className="flex items-start text-sm">
+              <CheckCircle2 className="w-4 h-4 text-primary mr-2 mt-0.5 shrink-0" />
+              <span className="text-muted-foreground line-clamp-1">{feature}</span>
+            </div>
+          ))}
+        </div>
+
         {/* Technologies */}
         <div className="flex flex-wrap gap-2 mb-6">
           {project.technologies.map((tech) => (
-            <span 
+            <span
               key={tech}
               className="px-2 py-1 bg-muted/50 rounded-md text-xs font-medium text-muted-foreground"
             >
@@ -247,31 +242,25 @@ function ProjectCard({ project, index, onViewDetails }: {
           ))}
         </div>
 
-        {/* Results */}
-        <div className="space-y-2 mb-6">
-          {project.results.slice(0, 2).map((result, idx) => (
-            <div key={idx} className="flex items-center text-sm">
-              <div className="w-2 h-2 rounded-full bg-primary mr-2" />
-              <span className="text-muted-foreground">{result}</span>
-            </div>
-          ))}
-        </div>
-
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-border/50">
+        <div className="mt-auto flex items-center justify-between pt-4 border-t border-border/50">
           <Button variant="ghost" size="sm" className="text-primary hover:text-primary-glow">
             View Details
             <ArrowRight className="ml-1 w-4 h-4" />
           </Button>
-          
-          <div className="flex space-x-2">
-            <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-              <ExternalLink className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-              <Github className="w-4 h-4" />
-            </Button>
-          </div>
+
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-primary"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.title} live website`}>
+              Live Site
+              <ExternalLink className="ml-1 w-4 h-4" />
+            </a>
+          </Button>
         </div>
       </div>
     </motion.div>
@@ -279,28 +268,69 @@ function ProjectCard({ project, index, onViewDetails }: {
 }
 
 function ProjectModal({ project, isOpen, onClose }: {
-  project: typeof projects[0] | null,
+  project: Project | null,
   isOpen: boolean,
   onClose: () => void
 }) {
+  const [activeShot, setActiveShot] = useState(0);
   if (!project) return null;
+  const shot = project.gallery[activeShot] ?? project.gallery[0];
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { setActiveShot(0); onClose(); } }}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-border">
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-2">{project.title}</h2>
               <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
                 {project.category}
               </span>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose} className="w-8 h-8 p-0">
+            <Button variant="ghost" size="sm" onClick={() => { setActiveShot(0); onClose(); }} className="w-8 h-8 p-0">
               <X className="w-4 h-4" />
             </Button>
           </div>
+
+          {/* Website snapshots */}
+          <div>
+            <div className="rounded-xl overflow-hidden border border-border/60 bg-muted/30">
+              <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border/60 bg-card">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
+                <span className="ml-3 flex items-center text-xs text-muted-foreground truncate">
+                  <Globe className="w-3 h-3 mr-1" />
+                  {project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                </span>
+              </div>
+              <img
+                src={shot}
+                alt={`${project.title} website snapshot ${activeShot + 1}`}
+                className="w-full h-auto block"
+              />
+            </div>
+            {project.gallery.length > 1 && (
+              <div className="flex gap-3 mt-3">
+                {project.gallery.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveShot(idx)}
+                    className={`w-28 aspect-[16/10] rounded-md overflow-hidden border-2 transition-colors ${
+                      idx === activeShot ? 'border-primary' : 'border-border/50 opacity-70 hover:opacity-100'
+                    }`}
+                    aria-label={`Show snapshot ${idx + 1}`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover object-top" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <p className="text-muted-foreground leading-relaxed">{project.description}</p>
 
           {/* Problem */}
           <div>
@@ -314,12 +344,25 @@ function ProjectModal({ project, isOpen, onClose }: {
             <p className="text-muted-foreground leading-relaxed">{project.solution}</p>
           </div>
 
+          {/* Core Functionalities */}
+          <div>
+            <h3 className="text-xl font-semibold text-foreground mb-3">Core Functionalities</h3>
+            <div className="grid md:grid-cols-2 gap-3">
+              {project.features.map((feature, idx) => (
+                <div key={idx} className="flex items-start text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-primary mr-2 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Technologies */}
           <div>
             <h3 className="text-xl font-semibold text-foreground mb-3">Technologies Used</h3>
             <div className="flex flex-wrap gap-2">
               {project.technologies.map((tech) => (
-                <span 
+                <span
                   key={tech}
                   className="px-3 py-1 bg-muted/50 rounded-md text-sm font-medium text-muted-foreground"
                 >
@@ -329,9 +372,9 @@ function ProjectModal({ project, isOpen, onClose }: {
             </div>
           </div>
 
-          {/* Results */}
+          {/* Highlights */}
           <div>
-            <h3 className="text-xl font-semibold text-neon-cyan mb-3">Quantifiable Results</h3>
+            <h3 className="text-xl font-semibold text-neon-cyan mb-3">Project Highlights</h3>
             <div className="grid md:grid-cols-3 gap-4">
               {project.results.map((result, idx) => (
                 <div key={idx} className="text-center p-4 card-neon">
@@ -347,14 +390,12 @@ function ProjectModal({ project, isOpen, onClose }: {
           </div>
 
           {/* Actions */}
-          <div className="flex space-x-4 pt-6 border-t border-border/50">
-            <Button className="btn-hero flex-1">
-              <ExternalLink className="mr-2 w-4 h-4" />
-              View Live Project
-            </Button>
-            <Button variant="outline" className="flex-1 border-border hover:bg-muted/50">
-              <Github className="mr-2 w-4 h-4" />
-              View Code
+          <div className="flex pt-6 border-t border-border/50">
+            <Button asChild className="btn-hero flex-1">
+              <a href={project.link} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="mr-2 w-4 h-4" />
+                View Live Project
+              </a>
             </Button>
           </div>
         </div>
@@ -366,10 +407,10 @@ function ProjectModal({ project, isOpen, onClose }: {
 export default function PortfolioSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleViewDetails = (project: typeof projects[0]) => {
+  const handleViewDetails = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
   };
@@ -405,44 +446,27 @@ export default function PortfolioSection() {
             <span className="text-foreground">Our </span>
             <span className="text-gradient-primary">Portfolio</span>
           </h2>
-          
+
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Real projects, real results. See how we've helped businesses transform their digital presence.
           </p>
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {projects.map((project, index) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
+            <ProjectCard
+              key={project.id}
+              project={project}
               index={index}
               onViewDetails={handleViewDetails}
             />
           ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="text-center"
-        >
-          <Button 
-            variant="outline"
-            size="lg"
-            className="px-8 py-4 text-lg border-primary/30 hover:border-primary hover:bg-primary/10"
-          >
-            View All Projects
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </motion.div>
       </div>
 
       {/* Project Modal */}
-      <ProjectModal 
+      <ProjectModal
         project={selectedProject}
         isOpen={isModalOpen}
         onClose={() => {
