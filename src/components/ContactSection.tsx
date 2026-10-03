@@ -1,318 +1,184 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { AlertCircle, ArrowUpRight, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import SectionHeader from './SectionHeader';
+import { logoMark } from '@/lib/brand';
+import { cn } from '@/lib/utils';
+
+const CONTACT_EMAIL = 'infrastations@gmail.com';
+
+const contactInfo = [
+  { icon: Mail, label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+  { icon: Phone, label: 'Phone', value: '+880 1577-360573', href: 'tel:+8801577360573' },
+  { icon: MapPin, label: 'Location', value: 'Mirpur, Dhaka, Bangladesh', href: 'https://maps.app.goo.gl/eoLqUnpGDdhBJYQj6' },
+];
+
+const projectTypes = ['Website', 'Web App', 'E-commerce', 'Cloud / DevOps', 'AI Solution', 'Other'];
 
 export default function ContactSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: "Email",
-      value: "infrastations@gmail.com",
-      href: "mailto:infrastations@gmail.com",
-      color: "text-primary"
-    },
-    {
-      icon: Phone,
-      label: "Phone",
-      value: "+8801577360573",
-      href: "tel:+8801577360573",
-      color: "text-secondary"
-    },
-    {
-      icon: MapPin,
-      label: "Location",
-      value: "Mirpur, Dhaka, Bangladesh",
-      href: "https://maps.app.goo.gl/eoLqUnpGDdhBJYQj6",
-      color: "text-neon-cyan"
-    }
-  ];
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [projectType, setProjectType] = useState('Website');
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters long';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const e: Record<string, string> = {};
+    if (!formData.name.trim()) e.name = 'Name is required';
+    if (!formData.email.trim()) e.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) e.email = 'Please enter a valid email address';
+    if (!formData.message.trim()) e.message = 'Message is required';
+    else if (formData.message.trim().length < 10) e.message = 'Message must be at least 10 characters long';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
     if (!validateForm()) {
-      toast({
-        title: "Please fix the errors",
-        description: "Check the form fields and try again.",
-        variant: "destructive",
-      });
+      toast({ title: 'Please fix the errors', description: 'Check the form fields and try again.', variant: 'destructive' });
       return;
     }
-
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 24 hours.",
-        variant: "default",
-      });
-      
-      setFormData({ name: '', email: '', message: '' });
-      setErrors({});
-    } catch (error) {
-      toast({
-        title: "Failed to send message",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    const subject = `New ${projectType} enquiry from ${formData.name}`;
+    const body = `Name: ${formData.name}\nEmail: ${formData.email}\nProject type: ${projectType}\n\n${formData.message}`;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    toast({ title: 'Opening your email app…', description: `Your message is ready to send to ${CONTACT_EMAIL}.` });
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
+  const fieldClass = (field: string) =>
+    cn(
+      'h-12 rounded-xl bg-muted/50 border-border focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary',
+      errors[field] && 'border-destructive focus-visible:ring-destructive/30'
+    );
+
   return (
-    <section id="contact" className="py-32 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/3 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-secondary/10 rounded-full blur-3xl" />
-      </div>
+    <section id="contact" className="relative py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <SectionHeader
+          eyebrow="Let's connect"
+          title={<>Have a project in mind? <span className="text-gradient-brand">Let's build it.</span></>}
+          lead="Tell us a little about what you need. We reply within 24 hours with next steps and a free consultation."
+        />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Header */}
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-20"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-16 grid overflow-hidden rounded-[2rem] border border-border bg-white shadow-elevated lg:grid-cols-[0.85fr_1.15fr]"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-primary/20 text-sm font-medium text-muted-foreground mb-6"
-          >
-            <span className="w-2 h-2 bg-secondary rounded-full mr-2 animate-pulse-neon"></span>
-            Let's Connect
-          </motion.div>
-
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-            <span className="text-foreground">Ready to </span>
-            <span className="text-gradient-primary">Start?</span>
-          </h2>
-          
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Let's discuss your project and explore how we can bring your vision to life.
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            <div>
-              <h3 className="text-2xl font-bold text-foreground mb-6">Get in Touch</h3>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Ready to transform your digital presence? We're here to help you build 
-                something extraordinary. Reach out and let's discuss your project.
+          {/* Info panel */}
+          <div className="relative overflow-hidden bg-gradient-brand p-8 sm:p-10 text-white">
+            <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
+            <img
+              src={logoMark}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-16 -right-16 w-72 opacity-20 mix-blend-screen"
+            />
+            <div className="relative">
+              <h3 className="text-2xl sm:text-3xl font-bold">Get in touch</h3>
+              <p className="mt-3 text-white/80 leading-relaxed">
+                Ready to transform your digital presence? Reach out directly or send us a message.
               </p>
-            </div>
 
-            <div className="space-y-6">
-              {contactInfo.map((info, index) => (
-                <motion.a
-                  key={info.label}
-                  href={info.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                  className="flex items-center space-x-4 p-4 rounded-xl hover:bg-card/50 transition-colors group"
-                >
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-current/20 to-current/5 flex items-center justify-center ${info.color} group-hover:scale-110 transition-transform`}>
-                    <info.icon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground">{info.label}</div>
-                    <div className="font-medium text-foreground group-hover:text-current transition-colors">
-                      {info.value}
-                    </div>
-                  </div>
-                </motion.a>
-              ))}
-            </div>
-
-            {/* Additional Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="card-neon"
-            >
-              <h4 className="font-semibold text-foreground mb-3">Why Choose Infra Stations?</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2 flex-shrink-0" />
-                  Professional development team
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-secondary mr-2 flex-shrink-0" />
-                  24/7 support and maintenance
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-neon-cyan mr-2 flex-shrink-0" />
-                  Cutting-edge technology stack
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2 flex-shrink-0" />
-                  Competitive pricing
-                </li>
+              <ul className="mt-10 space-y-4">
+                {contactInfo.map((info) => (
+                  <li key={info.label}>
+                    <a
+                      href={info.href}
+                      target={info.href.startsWith('http') ? '_blank' : undefined}
+                      rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-colors hover:bg-white/20"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-brand-indigo">
+                        <info.icon className="h-5 w-5" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-white/70">{info.label}</span>
+                        <span className="block truncate font-semibold">{info.value}</span>
+                      </span>
+                      <ArrowUpRight className="ml-auto h-4 w-4 shrink-0 opacity-60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                    </a>
+                  </li>
+                ))}
               </ul>
-            </motion.div>
-          </motion.div>
 
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          >
-            <form onSubmit={handleSubmit} className="card-neon space-y-6">
-              <h3 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h3>
-              
-              {/* Name Field */}
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                  Name *
-                </label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className={`bg-background border-border focus:border-primary ${errors.name ? 'border-destructive focus:border-destructive' : ''}`}
-                  placeholder="Your full name"
-                />
-                {errors.name && (
-                  <div className="flex items-center mt-1 text-sm text-destructive">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.name}
-                  </div>
-                )}
+              <div className="mt-10 flex items-center gap-3 text-sm text-white/80">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/70" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-white" />
+                </span>
+                Available for new projects
               </div>
+            </div>
+          </div>
 
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                  Email *
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`bg-background border-border focus:border-primary ${errors.email ? 'border-destructive focus:border-destructive' : ''}`}
-                  placeholder="your@email.com"
-                />
-                {errors.email && (
-                  <div className="flex items-center mt-1 text-sm text-destructive">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.email}
-                  </div>
-                )}
+          {/* Form */}
+          <form onSubmit={handleSubmit} noValidate className="space-y-6 p-8 sm:p-10">
+            <div>
+              <span className="block text-sm font-semibold text-foreground mb-3">What can we help with?</span>
+              <div className="flex flex-wrap gap-2">
+                {projectTypes.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setProjectType(t)}
+                    aria-pressed={projectType === t}
+                    className={cn(
+                      'rounded-full border px-4 py-2 text-sm font-medium transition-all',
+                      projectType === t
+                        ? 'border-transparent bg-gradient-brand text-white shadow-brand'
+                        : 'border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                    )}
+                  >
+                    {t}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Message Field */}
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  Message *
-                </label>
-                <Textarea
-                  id="message"
-                  value={formData.message}
-                  onChange={(e) => handleInputChange('message', e.target.value)}
-                  className={`bg-background border-border focus:border-primary min-h-[120px] resize-none ${errors.message ? 'border-destructive focus:border-destructive' : ''}`}
-                  placeholder="Tell us about your project..."
-                />
-                {errors.message && (
-                  <div className="flex items-center mt-1 text-sm text-destructive">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.message}
-                  </div>
-                )}
+                <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">Name *</label>
+                <Input id="name" value={formData.name} onChange={(e) => handleInputChange('name', e.target.value)} className={fieldClass('name')} placeholder="Your full name" />
+                {errors.name && <p className="mt-1.5 flex items-center text-sm text-destructive"><AlertCircle className="mr-1 h-4 w-4" />{errors.name}</p>}
               </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">Email *</label>
+                <Input id="email" type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} className={fieldClass('email')} placeholder="you@company.com" />
+                {errors.email && <p className="mt-1.5 flex items-center text-sm text-destructive"><AlertCircle className="mr-1 h-4 w-4" />{errors.email}</p>}
+              </div>
+            </div>
 
-              {/* Submit Button */}
-              <Button 
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-hero w-full"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    Send Message
-                    <Send className="ml-2 h-4 w-4" />
-                  </>
-                )}
-              </Button>
+            <div>
+              <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">Project details *</label>
+              <Textarea
+                id="message"
+                value={formData.message}
+                onChange={(e) => handleInputChange('message', e.target.value)}
+                className={cn(fieldClass('message'), 'h-auto min-h-[150px] resize-none py-3')}
+                placeholder="Tell us about your goals, timeline and budget…"
+              />
+              {errors.message && <p className="mt-1.5 flex items-center text-sm text-destructive"><AlertCircle className="mr-1 h-4 w-4" />{errors.message}</p>}
+            </div>
 
-              <p className="text-xs text-muted-foreground text-center">
-                We'll respond within 24 hours. Your information is kept confidential.
-              </p>
-            </form>
-          </motion.div>
-        </div>
+            <button type="submit" className="btn-brand w-full h-14 text-base">
+              Send Message
+              <Send className="h-4 w-4" />
+            </button>
+            <p className="text-center text-xs text-muted-foreground">
+              We respond within 24 hours. Your information is kept confidential.
+            </p>
+          </form>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { ExternalLink, ArrowRight, X, CheckCircle2, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { ExternalLink, ArrowRight, CheckCircle2, Globe } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import SectionHeader from './SectionHeader';
 
 // Website UI snapshots (desktop, 1440x900)
 import inshaHajj1 from '@/assets/portfolio/insha-hajj-umrah-1.jpg';
@@ -162,108 +161,111 @@ const projects: Project[] = [
   },
 ];
 
+function BrowserFrame({ url, children, className = '' }: { url: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-xl border border-border bg-white shadow-elevated ${className}`}>
+      <div className="flex items-center gap-1.5 border-b border-border bg-muted/60 px-3 py-2">
+        <span className="h-2 w-2 rounded-full bg-[#FF5F57]" />
+        <span className="h-2 w-2 rounded-full bg-[#FEBC2E]" />
+        <span className="h-2 w-2 rounded-full bg-[#28C840]" />
+        <span className="ml-2 flex min-w-0 flex-1 items-center gap-1 rounded-md bg-white px-2 py-0.5 text-[10px] text-muted-foreground">
+          <Globe className="h-2.5 w-2.5 shrink-0" />
+          <span className="truncate">{url}</span>
+        </span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+const displayUrl = (link: string) => link.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
 function ProjectCard({ project, index, onViewDetails }: {
   project: Project,
   index: number,
   onViewDetails: (project: Project) => void
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 100 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
-      transition={{ duration: 0.8, delay: (index % 3) * 0.2, ease: "easeOut" }}
-      className="group hover-lift cursor-pointer"
+    <motion.article
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.7, delay: (index % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className="group surface surface-hover flex cursor-pointer flex-col overflow-hidden"
       onClick={() => onViewDetails(project)}
     >
-      <div className="card-neon h-full overflow-hidden flex flex-col">
-        {/* Website Snapshot */}
-        <div className="relative aspect-[16/10] mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 border border-border/50">
-          {/* Browser bar */}
-          <div className="absolute top-0 inset-x-0 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-card/90 backdrop-blur-sm border-b border-border/50">
-            <span className="w-2 h-2 rounded-full bg-red-400/80" />
-            <span className="w-2 h-2 rounded-full bg-yellow-400/80" />
-            <span className="w-2 h-2 rounded-full bg-green-400/80" />
-            <span className="ml-2 text-[10px] text-muted-foreground truncate">
-              {project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-            </span>
+      {/* Snapshot stage */}
+      <div className="relative overflow-hidden bg-gradient-soft px-6 pt-6">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" />
+        <span className="absolute left-4 top-4 z-10 rounded-full border border-white bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-indigo shadow-sm backdrop-blur">
+          {project.category}
+        </span>
+        <BrowserFrame
+          url={displayUrl(project.link)}
+          className="relative mt-8 translate-y-2 rounded-b-none transition-transform duration-500 ease-out group-hover:translate-y-0"
+        >
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <img
+              src={project.gallery[0]}
+              alt={`${project.title} website homepage`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-500 group-hover:opacity-0"
+            />
+            <img
+              src={project.gallery[1] ?? project.gallery[0]}
+              alt={`${project.title} website section`}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-top opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            />
           </div>
-          <img
-            src={project.gallery[0]}
-            alt={`${project.title} website homepage`}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover object-top pt-6 transition-opacity duration-500 group-hover:opacity-0"
-          />
-          <img
-            src={project.gallery[1] ?? project.gallery[0]}
-            alt={`${project.title} website section`}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover object-top pt-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10" />
-          <div className="absolute bottom-3 left-3 z-20">
-            <span className="px-3 py-1 bg-card/90 backdrop-blur-sm rounded-full text-xs font-medium text-primary border border-primary/20">
-              {project.category}
-            </span>
-          </div>
-        </div>
+        </BrowserFrame>
+      </div>
 
-        {/* Content */}
-        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-gradient-primary transition-all duration-300">
+      {/* Content */}
+      <div className="flex flex-1 flex-col p-7">
+        <h3 className="text-xl font-bold text-foreground transition-colors group-hover:text-primary">
           {project.title}
         </h3>
-
-        <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-3">
+        <p className="mt-2.5 line-clamp-3 text-[15px] leading-relaxed text-muted-foreground">
           {project.description}
         </p>
 
-        {/* Core Functionalities */}
-        <div className="space-y-2 mb-5">
+        <ul className="mt-5 space-y-2">
           {project.features.slice(0, 3).map((feature, idx) => (
-            <div key={idx} className="flex items-start text-sm">
-              <CheckCircle2 className="w-4 h-4 text-primary mr-2 mt-0.5 shrink-0" />
-              <span className="text-muted-foreground line-clamp-1">{feature}</span>
-            </div>
+            <li key={idx} className="flex items-start text-sm">
+              <CheckCircle2 className="mr-2 mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+              <span className="line-clamp-1 text-foreground/75">{feature}</span>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="mt-5 flex flex-wrap gap-1.5">
           {project.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="px-2 py-1 bg-muted/50 rounded-md text-xs font-medium text-muted-foreground"
-            >
+            <span key={tech} className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
               {tech}
             </span>
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="mt-auto flex items-center justify-between pt-4 border-t border-border/50">
-          <Button variant="ghost" size="sm" className="text-primary hover:text-primary-glow">
-            View Details
-            <ArrowRight className="ml-1 w-4 h-4" />
-          </Button>
-
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground hover:text-primary"
+        <div className="mt-auto flex items-center justify-between gap-3 pt-7">
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+            Case study
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </span>
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
+            aria-label={`Visit ${project.title} live website`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
           >
-            <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.title} live website`}>
-              Live Site
-              <ExternalLink className="ml-1 w-4 h-4" />
-            </a>
-          </Button>
+            Live site
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
@@ -278,125 +280,94 @@ function ProjectModal({ project, isOpen, onClose }: {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { setActiveShot(0); onClose(); } }}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-border">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
+      <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto rounded-3xl border-border bg-white p-0 sm:rounded-3xl">
+        {/* Visual header */}
+        <div className="relative bg-gradient-soft px-6 pt-8 sm:px-10">
+          <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" />
+          <div className="relative pr-8">
+            <span className="rounded-full border border-white bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-indigo">
+              {project.category}
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-foreground">{project.title}</h2>
+            <p className="mt-3 max-w-3xl text-muted-foreground leading-relaxed">{project.description}</p>
+          </div>
+
+          <BrowserFrame url={displayUrl(project.link)} className="relative mt-8 rounded-b-none">
+            <img src={shot} alt={`${project.title} website snapshot ${activeShot + 1}`} className="block h-auto w-full" />
+          </BrowserFrame>
+        </div>
+
+        <div className="space-y-10 px-6 py-8 sm:px-10">
+          {project.gallery.length > 1 && (
+            <div className="-mt-2 flex gap-3">
+              {project.gallery.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveShot(idx)}
+                  className={`aspect-[16/10] w-28 overflow-hidden rounded-lg border-2 transition-all ${
+                    idx === activeShot ? 'border-primary shadow-brand' : 'border-border opacity-70 hover:opacity-100'
+                  }`}
+                  aria-label={`Show snapshot ${idx + 1}`}
+                >
+                  <img src={img} alt="" className="h-full w-full object-cover object-top" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Highlights */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            {project.results.map((result, idx) => (
+              <div key={idx} className="rounded-2xl border border-border bg-muted/40 p-5">
+                <div className="font-display text-3xl font-extrabold text-gradient-brand">{result.split(' ')[0]}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{result.split(' ').slice(1).join(' ')}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">{project.title}</h2>
-              <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                {project.category}
-              </span>
+              <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-brand-magenta">The challenge</h3>
+              <p className="mt-3 leading-relaxed text-foreground/80">{project.problem}</p>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => { setActiveShot(0); onClose(); }} className="w-8 h-8 p-0">
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {/* Website snapshots */}
-          <div>
-            <div className="rounded-xl overflow-hidden border border-border/60 bg-muted/30">
-              <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border/60 bg-card">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
-                <span className="ml-3 flex items-center text-xs text-muted-foreground truncate">
-                  <Globe className="w-3 h-3 mr-1" />
-                  {project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                </span>
-              </div>
-              <img
-                src={shot}
-                alt={`${project.title} website snapshot ${activeShot + 1}`}
-                className="w-full h-auto block"
-              />
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-brand-blue">Our solution</h3>
+              <p className="mt-3 leading-relaxed text-foreground/80">{project.solution}</p>
             </div>
-            {project.gallery.length > 1 && (
-              <div className="flex gap-3 mt-3">
-                {project.gallery.map((img, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setActiveShot(idx)}
-                    className={`w-28 aspect-[16/10] rounded-md overflow-hidden border-2 transition-colors ${
-                      idx === activeShot ? 'border-primary' : 'border-border/50 opacity-70 hover:opacity-100'
-                    }`}
-                    aria-label={`Show snapshot ${idx + 1}`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover object-top" />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-
-          {/* Problem */}
           <div>
-            <h3 className="text-xl font-semibold text-secondary mb-3">The Problem</h3>
-            <p className="text-muted-foreground leading-relaxed">{project.problem}</p>
-          </div>
-
-          {/* Solution */}
-          <div>
-            <h3 className="text-xl font-semibold text-primary mb-3">Our Solution</h3>
-            <p className="text-muted-foreground leading-relaxed">{project.solution}</p>
-          </div>
-
-          {/* Core Functionalities */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-3">Core Functionalities</h3>
-            <div className="grid md:grid-cols-2 gap-3">
+            <h3 className="text-lg font-bold text-foreground">Core functionalities</h3>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               {project.features.map((feature, idx) => (
-                <div key={idx} className="flex items-start text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-primary mr-2 mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">{feature}</span>
+                <div key={idx} className="flex items-start rounded-xl border border-border p-3.5 text-sm">
+                  <CheckCircle2 className="mr-2.5 mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                  <span className="text-foreground/80">{feature}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Technologies */}
           <div>
-            <h3 className="text-xl font-semibold text-foreground mb-3">Technologies Used</h3>
-            <div className="flex flex-wrap gap-2">
+            <h3 className="text-lg font-bold text-foreground">Technologies used</h3>
+            <div className="mt-4 flex flex-wrap gap-2">
               {project.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 bg-muted/50 rounded-md text-sm font-medium text-muted-foreground"
-                >
+                <span key={tech} className="rounded-full border border-border bg-white px-3.5 py-1.5 text-sm font-medium text-foreground/80">
                   {tech}
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Highlights */}
-          <div>
-            <h3 className="text-xl font-semibold text-neon-cyan mb-3">Project Highlights</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {project.results.map((result, idx) => (
-                <div key={idx} className="text-center p-4 card-neon">
-                  <div className="text-2xl font-bold text-primary mb-1">
-                    {result.split(' ')[0]}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {result.split(' ').slice(1).join(' ')}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex pt-6 border-t border-border/50">
-            <Button asChild className="btn-hero flex-1">
-              <a href={project.link} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 w-4 h-4" />
-                View Live Project
-              </a>
-            </Button>
+          <div className="flex flex-col gap-3 border-t border-border pt-8 sm:flex-row">
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-brand flex-1">
+              <ExternalLink className="h-4 w-4" />
+              View Live Project
+            </a>
+            <a href="#contact" onClick={() => { setActiveShot(0); onClose(); }} className="btn-ghost-brand flex-1">
+              Start a similar project
+            </a>
           </div>
         </div>
       </DialogContent>
@@ -405,8 +376,6 @@ function ProjectModal({ project, isOpen, onClose }: {
 }
 
 export default function PortfolioSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -416,56 +385,31 @@ export default function PortfolioSection() {
   };
 
   return (
-    <section id="portfolio" className="py-32 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      </div>
+    <section id="portfolio" className="relative overflow-hidden py-24 lg:py-32">
+      <div className="pointer-events-none absolute left-1/2 top-40 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-soft blur-3xl opacity-80" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-20"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-secondary/20 text-sm font-medium text-muted-foreground mb-6"
-          >
-            <span className="w-2 h-2 bg-neon-cyan rounded-full mr-2 animate-pulse-neon"></span>
-            Featured Projects
-          </motion.div>
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeader
+            align="left"
+            className="lg:max-w-3xl"
+            eyebrow="Featured work"
+            title={<>Real projects. <span className="text-gradient-brand">Real results.</span></>}
+            lead="A selection of platforms we've designed and shipped for businesses across travel, food, education, retail, design and healthcare."
+          />
+          <a href="#contact" className="btn-ghost-brand shrink-0 self-start lg:self-auto">
+            Start your project
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
 
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-            <span className="text-foreground">Our </span>
-            <span className="text-gradient-primary">Portfolio</span>
-          </h2>
-
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Real projects, real results. See how we've helped businesses transform their digital presence.
-          </p>
-        </motion.div>
-
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              onViewDetails={handleViewDetails}
-            />
+            <ProjectCard key={project.id} project={project} index={index} onViewDetails={handleViewDetails} />
           ))}
         </div>
       </div>
 
-      {/* Project Modal */}
       <ProjectModal
         project={selectedProject}
         isOpen={isModalOpen}

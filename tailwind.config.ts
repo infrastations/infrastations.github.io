@@ -19,8 +19,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
+				'sans': ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+				'display': ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
 				'inter': ['Inter', 'system-ui', 'sans-serif'],
-				'space': ['Space Grotesk', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -58,6 +59,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				brand: {
+					blue: 'hsl(var(--brand-blue))',
+					indigo: 'hsl(var(--brand-indigo))',
+					plum: 'hsl(var(--brand-plum))',
+					magenta: 'hsl(var(--brand-magenta))',
+					ink: 'hsl(var(--brand-ink))'
+				},
 				neon: {
 					blue: 'hsl(var(--neon-blue))',
 					pink: 'hsl(var(--neon-pink))',
@@ -70,12 +78,16 @@ export default {
 				'gradient-hero': 'var(--gradient-hero)',
 				'gradient-card': 'var(--gradient-card)',
 				'gradient-neon': 'var(--gradient-neon)',
+				'gradient-brand': 'var(--gradient-brand)',
+				'gradient-soft': 'var(--gradient-soft)',
 			},
 			boxShadow: {
 				'neon-blue': 'var(--shadow-neon-blue)',
 				'neon-pink': 'var(--shadow-neon-pink)',
 				'card': 'var(--shadow-card)',
 				'hero': 'var(--shadow-hero)',
+				'elevated': 'var(--shadow-elevated)',
+				'brand': 'var(--shadow-brand)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -98,11 +110,32 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				marquee: {
+					from: { transform: 'translateX(0)' },
+					to: { transform: 'translateX(-50%)' }
+				},
+				float: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-12px)' }
+				},
+				'spin-slow': {
+					from: { transform: 'rotate(0deg)' },
+					to: { transform: 'rotate(360deg)' }
+				},
+				'gradient-x': {
+					'0%, 100%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				marquee: 'marquee 40s linear infinite',
+				float: 'float 6s ease-in-out infinite',
+				'float-delayed': 'float 7s ease-in-out 1.5s infinite',
+				'spin-slow': 'spin-slow 40s linear infinite',
+				'gradient-x': 'gradient-x 8s ease infinite'
 			}
 		}
 	},

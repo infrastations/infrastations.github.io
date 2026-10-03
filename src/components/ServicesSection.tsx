@@ -1,149 +1,139 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { Code2, Cloud, Brain, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {
+  ArrowUpRight, Brain, Cloud, Code2, Gauge, LifeBuoy, Palette, Search, ShieldCheck, Workflow,
+} from 'lucide-react';
+import SectionHeader from './SectionHeader';
+import { cn } from '@/lib/utils';
 
 const services = [
   {
     icon: Code2,
-    title: "Web Development",
-    description: "We don't just write code; we build digital experiences. Clean architecture, user-centric design, and scalable performance.",
-    features: ["React & Next.js", "TypeScript", "Responsive Design", "Performance Optimization"],
-    color: "text-primary",
-    gradient: "from-primary/20 to-primary/5"
+    title: 'Web Development',
+    description:
+      "We don't just write code — we build digital experiences. Clean architecture, user-centric design and fast, scalable performance for websites, web apps and e-commerce.",
+    features: ['React & Next.js', 'TypeScript', 'Responsive UI', 'E-commerce & CMS'],
+    tone: 'blue',
+    span: 'lg:col-span-2',
   },
   {
     icon: Cloud,
-    title: "Cloud Infrastructure",
-    description: "We are the architects of the digital world. Creating resilient, secure, and scalable cloud solutions from microservices to serverless architectures.",
-    features: ["AWS & Azure", "Kubernetes", "DevOps & CI/CD", "Serverless Architecture"],
-    color: "text-neon-cyan",
-    gradient: "from-neon-cyan/20 to-neon-cyan/5"
+    title: 'Cloud Infrastructure',
+    description:
+      'Resilient, secure and cost-efficient cloud — from microservices and Kubernetes to serverless and CI/CD.',
+    features: ['AWS & Azure', 'Kubernetes', 'DevOps & CI/CD', 'Serverless'],
+    tone: 'indigo',
+    span: '',
   },
   {
     icon: Brain,
-    title: "Agentic AI",
-    description: "Building intelligent, self-learning systems that automate complex tasks and drive new insights for businesses.",
-    features: ["Machine Learning", "Natural Language Processing", "Automation", "Predictive Analytics"],
-    color: "text-secondary",
-    gradient: "from-secondary/20 to-secondary/5"
-  }
+    title: 'Agentic AI',
+    description:
+      'Intelligent, self-improving systems that automate complex workflows and surface new business insight.',
+    features: ['LLM Agents', 'NLP', 'Automation', 'Predictive Analytics'],
+    tone: 'magenta',
+    span: '',
+  },
+] as const;
+
+const extras = [
+  { icon: Palette, label: 'UI/UX & Brand Design' },
+  { icon: Search, label: 'SEO & Analytics' },
+  { icon: Gauge, label: 'Performance Tuning' },
+  { icon: ShieldCheck, label: 'Security Hardening' },
+  { icon: Workflow, label: 'API & Integrations' },
+  { icon: LifeBuoy, label: 'Maintenance & Support' },
 ];
 
-function ServiceCard({ service, index }: { service: typeof services[0], index: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 100 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
-      transition={{ duration: 0.8, delay: index * 0.2, ease: "easeOut" }}
-      className="group"
-    >
-      <div className={`card-neon h-full bg-gradient-to-br ${service.gradient} group-hover:scale-[1.02] transition-all duration-300`}>
-        {/* Icon */}
-        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-          <service.icon className={`w-8 h-8 ${service.color}`} />
-        </div>
-
-        {/* Content */}
-        <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-gradient-primary transition-all duration-300">
-          {service.title}
-        </h3>
-        
-        <p className="text-muted-foreground leading-relaxed mb-6">
-          {service.description}
-        </p>
-
-        {/* Features */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          {service.features.map((feature, idx) => (
-            <div key={idx} className="flex items-center text-sm">
-              <div className={`w-2 h-2 rounded-full ${service.color} bg-current mr-2`} />
-              <span className="text-muted-foreground">{feature}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <Button 
-          variant="ghost" 
-          className={`group/btn w-full justify-between ${service.color} hover:bg-current/10`}
-        >
-          Learn More
-          <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-        </Button>
-      </div>
-    </motion.div>
-  );
-}
+const toneStyles: Record<string, { icon: string; glow: string; dot: string }> = {
+  blue: { icon: 'from-brand-blue to-brand-indigo', glow: 'bg-brand-blue/15', dot: 'bg-brand-blue' },
+  indigo: { icon: 'from-brand-indigo to-brand-plum', glow: 'bg-brand-indigo/15', dot: 'bg-brand-indigo' },
+  magenta: { icon: 'from-brand-plum to-brand-magenta', glow: 'bg-brand-magenta/15', dot: 'bg-brand-magenta' },
+};
 
 export default function ServicesSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section id="services" className="py-32 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/5 rounded-full blur-3xl" />
-      </div>
+    <section id="services" className="relative py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <SectionHeader
+          eyebrow="What we do"
+          title={<>Three pillars. <span className="text-gradient-brand">One partner.</span></>}
+          lead="Strategy, design and engineering under one roof — so your website, your infrastructure and your AI all work as one system."
+        />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-20"
-        >
+        <div className="mt-16 grid gap-5 lg:grid-cols-3">
+          {services.map((s, i) => {
+            const tone = toneStyles[s.tone];
+            return (
+              <motion.article
+                key={s.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className={cn('group surface surface-hover relative overflow-hidden p-8 lg:p-10', s.span)}
+              >
+                <div className={cn('pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full blur-3xl transition-opacity duration-500 opacity-60 group-hover:opacity-100', tone.glow)} />
+
+                <div className={cn('relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-brand', tone.icon)}>
+                  <s.icon className="h-7 w-7" />
+                </div>
+
+                <h3 className="relative mt-7 text-2xl lg:text-[28px] font-bold text-foreground">{s.title}</h3>
+                <p className="relative mt-3 max-w-xl leading-relaxed text-muted-foreground">{s.description}</p>
+
+                <ul className="relative mt-7 flex flex-wrap gap-2">
+                  {s.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 rounded-full border border-border bg-muted/60 px-3 py-1.5 text-sm font-medium text-foreground/80">
+                      <span className={cn('h-1.5 w-1.5 rounded-full', tone.dot)} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href="#contact"
+                  className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors group-hover:text-primary"
+                >
+                  Discuss your project
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
+              </motion.article>
+            );
+          })}
+
+          {/* Capabilities strip */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-primary/20 text-sm font-medium text-muted-foreground mb-6"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-brand p-8 lg:col-span-2 lg:p-10 text-white shadow-brand"
           >
-            <span className="w-2 h-2 bg-secondary rounded-full mr-2 animate-pulse-neon"></span>
-            Our Core Services
+            <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
+            <div className="relative flex h-full flex-col">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/75">End-to-end delivery</p>
+              <h3 className="mt-3 text-2xl lg:text-[28px] font-bold">Everything you need to launch — and keep growing.</h3>
+              <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {extras.map((e) => (
+                  <li key={e.label} className="flex items-center gap-2.5 rounded-2xl bg-white/10 border border-white/20 px-3.5 py-3 text-sm font-medium backdrop-blur">
+                    <e.icon className="h-4 w-4 shrink-0" />
+                    {e.label}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-col gap-4 border-t border-white/20 pt-6 sm:mt-auto sm:flex-row sm:items-center sm:justify-between">
+                <p className="max-w-md text-white/85">Not sure where to start? Get a free consultation and a clear, no-obligation project plan.</p>
+                <a
+                  href="#contact"
+                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-brand-indigo transition-transform hover:-translate-y-0.5"
+                >
+                  Get a free consultation
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
           </motion.div>
-
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-            <span className="text-foreground">What We </span>
-            <span className="text-gradient-primary">Build</span>
-          </h2>
-          
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Three core pillars of modern technology, delivered with excellence and innovation.
-          </p>
-        </motion.div>
-
-        {/* Services Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <ServiceCard key={service.title} service={service} index={index} />
-          ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="text-center mt-16"
-        >
-          <Button 
-            className="btn-hero"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Let's Build Something Amazing
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </motion.div>
       </div>
     </section>
   );
